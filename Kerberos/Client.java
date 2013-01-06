@@ -30,16 +30,20 @@ public class Client extends Object {
 
 	public boolean login(String userName, char[] password) {
 	// TODO!!
+        System.out.println("Client#login");
+        return false;
 	}
 
 	public boolean showFile(String serverName, String filePath) {
 	// TODO!!
+        System.out.println("Client#showFile");
+        return false;
 	}
 
 	/* *********** Hilfsmethoden **************************** */
 
 	private long generateSimpleKeyForPassword(char[] pw) {
-		// Liefert einen Schlüssel für ein Passwort zurück, hier simuliert als
+		// Liefert einen Schlï¿½ssel fï¿½r ein Passwort zurï¿½ck, hier simuliert als
 		// long-Wert
 		long pwKey = 0;
 		for (int i = 0; i < pw.length; i++) {

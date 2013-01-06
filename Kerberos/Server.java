@@ -34,12 +34,14 @@ public class Server extends Object {
 
 	public boolean requestService(Ticket srvTicket, Auth srvAuth, String command, String parameter) {
 	// TODO!!
-	}
+        System.out.println("Server#requestService");
+        return false;
+    }
 
 	/* *********** Services **************************** */
 
 	private boolean showFile(String filePath) {
-		// Rückgabe: Status der Operation
+		// Rï¿½ckgabe: Status der Operation
 		String lineBuf = null;
 		File myFile = new File(filePath);
 
@@ -77,8 +79,8 @@ public class Server extends Object {
 	}
 
 	boolean timeFresh (long testTime) {
-			// Wenn die übergebene Zeit nicht mehr als 5 Minuten von der aktuellen Zeit abweicht,
-			// wird true zurückgegeben
+			// Wenn die ï¿½bergebene Zeit nicht mehr als 5 Minuten von der aktuellen Zeit abweicht,
+			// wird true zurï¿½ckgegeben
 			long currentTime = (new Date()).getTime();  // Anzahl mSek. seit 1.1.1970
 				if (Math.abs(currentTime - testTime) < fiveMinutesInMillis) {
 					return true;
