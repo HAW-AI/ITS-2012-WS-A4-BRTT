@@ -29,9 +29,26 @@ public class Client extends Object {
 	}
 
 	public boolean login(String userName, char[] password) {
-	// TODO!!
         System.out.println("Client#login");
-        return false;
+
+        // what is the nonce good for? it's not part of the official kerberos protocol
+        TicketResponse ticketResponse = myKDC.requestTGSTicket(userName, myKDC.getName(), generateNonce());
+
+        boolean success = false;
+
+        if (ticketResponse.decrypt(generateSimpleKeyForPassword(password))) {
+            tgsSessionKey = ticketResponse.getSessionKey();
+            tgsTicket = ticketResponse.getResponseTicket();
+
+            // remove password from memory
+            Arrays.fill(password, (char) 0);
+
+            success = true;
+        } else {
+            System.out.println("*** could not decrypt ticket response");
+        }
+
+        return success;
 	}
 
 	public boolean showFile(String serverName, String filePath) {
