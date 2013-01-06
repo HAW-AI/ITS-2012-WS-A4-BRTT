@@ -37,7 +37,11 @@ public class Client extends Object {
         boolean success = false;
 
         if (ticketResponse.decrypt(generateSimpleKeyForPassword(password))) {
+            logGood("decrypted ticket response");
+
             if (ticketResponse.getNonce() == nonce) {
+                logGood("validated nonce from response");
+
                 currentUser = userName;
                 tgsSessionKey = ticketResponse.getSessionKey();
                 tgsTicket = ticketResponse.getResponseTicket();
@@ -47,10 +51,10 @@ public class Client extends Object {
 
                 success = true;
             } else {
-                System.out.println("*** got wrong nonce back");
+                logBad("could not validate nonce from response");
             }
         } else {
-            System.out.println("*** could not decrypt ticket response");
+            logBad("could not decrypt ticket response");
         }
 
         return success;
@@ -79,4 +83,12 @@ public class Client extends Object {
 		long rand = (long) (100000000 * Math.random());
 		return rand;
 	}
+
+    private void logGood(String msg) {
+        System.out.println("*** good: " + msg);
+    }
+
+    private void logBad(String msg) {
+        System.out.println("*** bad: " + msg);
+    }
 }
