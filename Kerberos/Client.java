@@ -38,6 +38,7 @@ public class Client extends Object {
 
         if (ticketResponse.decrypt(generateSimpleKeyForPassword(password))) {
             if (ticketResponse.getNonce() == nonce) {
+                currentUser = userName;
                 tgsSessionKey = ticketResponse.getSessionKey();
                 tgsTicket = ticketResponse.getResponseTicket();
 
