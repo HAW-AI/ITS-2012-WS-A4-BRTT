@@ -69,13 +69,12 @@ public class Client extends Object {
 
 	public boolean showFile(String serverName, String filePath) {
 		boolean success = false;
-		Ticket ticket = null;
 		Ticket serverTicket = null;
 		
 		System.out.println("Client#showFile");
 		
 		// Login prüfen: TGS-Ticket vorhanden?
-		if ((ticket = getTGSTicket()) != null ) {
+		if (getTGSTicket() != null ) {
 			
 			// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern (Schritt 3: requestServerTicket) und Antwort auswerten
 			if ((serverTicket = getServerTicket(serverName)) != null) {
@@ -103,7 +102,7 @@ public class Client extends Object {
 	}
 	
 	private Ticket getServerTicket(String serverName) {
-		if (serverTicket.equals(null)) {
+		if (serverTicket == null) {
 			// build serverTicket
 			Auth auth = buildAuth();
 			auth.encrypt(tgsSessionKey);
@@ -112,6 +111,7 @@ public class Client extends Object {
 			if (ticket.decrypt(tgsSessionKey)) {
 				serverTicket = ticket.getResponseTicket();
 				serverSessionKey = ticket.getSessionKey();
+				serverTicket.print();
 			}
 		}
 		return serverTicket;

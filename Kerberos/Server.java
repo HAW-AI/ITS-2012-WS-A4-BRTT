@@ -33,9 +33,17 @@ public class Server extends Object {
 	}
 
 	public boolean requestService(Ticket srvTicket, Auth srvAuth, String command, String parameter) {
-	// TODO!!
-        System.out.println("Server#requestService");
-        return false;
+		boolean success = false;
+		
+		if (srvTicket.decrypt(myKey)) {
+			if (srvAuth.decrypt(srvTicket.getSessionKey())) {
+				if (command.equalsIgnoreCase("showFile")) {
+					success = showFile(parameter);
+				}
+			}
+		}
+		
+		return success;
     }
 
 	/* *********** Services **************************** */
