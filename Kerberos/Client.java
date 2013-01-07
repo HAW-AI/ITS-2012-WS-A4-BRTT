@@ -29,53 +29,55 @@ public class Client extends Object {
 	}
 
 	public boolean login(String userName, char[] password) {
-        System.out.println("Client#login");
+		System.out.println("Client#login");
 
-        long nonce = generateNonce();
-        TicketResponse ticketResponse = myKDC.requestTGSTicket(userName, myKDC.getName(), nonce);
+		long nonce = generateNonce();
+		TicketResponse ticketResponse = myKDC.requestTGSTicket(userName,
+				myKDC.getName(), nonce);
 
-        boolean success = false;
+		boolean success = false;
 
-        if (ticketResponse != null) {
-            logGood("received ticket response");
+		if (ticketResponse != null) {
+			logGood("received ticket response");
 
-            if (ticketResponse.decrypt(generateSimpleKeyForPassword(password))) {
-                logGood("decrypted ticket response");
+			if (ticketResponse.decrypt(generateSimpleKeyForPassword(password))) {
+				logGood("decrypted ticket response");
 
-                if (ticketResponse.getNonce() == nonce) {
-                    logGood("validated nonce from response");
+				if (ticketResponse.getNonce() == nonce) {
+					logGood("validated nonce from response");
 
-                    currentUser = userName;
-                    tgsSessionKey = ticketResponse.getSessionKey();
-                    tgsTicket = ticketResponse.getResponseTicket();
+					currentUser = userName;
+					tgsSessionKey = ticketResponse.getSessionKey();
+					tgsTicket = ticketResponse.getResponseTicket();
 
-                    // remove password from memory
-                    Arrays.fill(password, (char) 0);
+					// remove password from memory
+					Arrays.fill(password, (char) 0);
 
-                    success = true;
-                } else {
-                    logBad("could not validate nonce from response");
-                }
-            } else {
-                logBad("could not decrypt ticket response");
-            }
-        } else {
-            logBad("did not receive ticket response (wrong user or server)");
-        }
+					success = true;
+				} else {
+					logBad("could not validate nonce from response");
+				}
+			} else {
+				logBad("could not decrypt ticket response");
+			}
+		} else {
+			logBad("did not receive ticket response (wrong user or server)");
+		}
 
-        return success;
+		return success;
 	}
 
 	public boolean showFile(String serverName, String filePath) {
-	// TODO!!
-        System.out.println("Client#showFile");
-        return false;
+		// TODO!!
+		System.out.println("Client#showFile");
+		return false;
 	}
 
 	/* *********** Hilfsmethoden **************************** */
 
 	private long generateSimpleKeyForPassword(char[] pw) {
-		// Liefert einen Schl�ssel f�r ein Passwort zur�ck, hier simuliert als
+		// Liefert einen Schl�ssel f�r ein Passwort zur�ck, hier simuliert
+		// als
 		// long-Wert
 		long pwKey = 0;
 		for (int i = 0; i < pw.length; i++) {
@@ -90,11 +92,11 @@ public class Client extends Object {
 		return rand;
 	}
 
-    private void logGood(String msg) {
-        System.out.println("*** good: " + msg);
-    }
+	private void logGood(String msg) {
+		System.out.println("*** good: " + msg);
+	}
 
-    private void logBad(String msg) {
-        System.out.println("*** bad: " + msg);
-    }
+	private void logBad(String msg) {
+		System.out.println("*** bad: " + msg);
+	}
 }
