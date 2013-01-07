@@ -68,7 +68,9 @@ public class Client extends Object {
 	}
 
 	public boolean showFile(String serverName, String filePath) {
-		// TODO!!
+		// Login prüfen: TGS-Ticket vorhanden?
+		// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern (Schritt 3: requestServerTicket) und Antwort auswerten
+		// Service beim Server anfordern (Schritt 5: requestService)
 		System.out.println("Client#showFile");
 		return false;
 	}
