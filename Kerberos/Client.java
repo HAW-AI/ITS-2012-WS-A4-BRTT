@@ -68,15 +68,41 @@ public class Client extends Object {
 	}
 
 	public boolean showFile(String serverName, String filePath) {
-		// Login prŸfen: TGS-Ticket vorhanden?
-		// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern (Schritt 3: requestServerTicket) und Antwort auswerten
-		// Service beim Server anfordern (Schritt 5: requestService)
+		boolean success = false;
+		Ticket ticket = null;
+		Ticket serverTicket = null;
+		
 		System.out.println("Client#showFile");
-		return false;
+		
+		// Login prŸfen: TGS-Ticket vorhanden?
+		if ((ticket = getTGSTicket()) != null ) {
+			
+			// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern (Schritt 3: requestServerTicket) und Antwort auswerten
+			if ((serverTicket = getServerTicket()) != null) {
+				
+				// Service beim Server anfordern (Schritt 5: requestService)
+				myFileserver.requestService(serverTicket, null, null, null);
+			}
+		}
+		return success;
 	}
 
 	/* *********** Hilfsmethoden **************************** */
 
+	private Ticket getTGSTicket() {
+		if (tgsTicket.equals(null)) {
+			// build tgsTicket?
+		}
+		return tgsTicket;
+	}
+	
+	private Ticket getServerTicket() {
+		if (serverTicket.equals(null)) {
+			// build serverTicket
+		}
+		return serverTicket;
+	}
+	
 	private long generateSimpleKeyForPassword(char[] pw) {
 		// Liefert einen Schlï¿½ssel fï¿½r ein Passwort zurï¿½ck, hier simuliert
 		// als
