@@ -78,10 +78,12 @@ public class Client extends Object {
 		if ((ticket = getTGSTicket()) != null ) {
 			
 			// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern (Schritt 3: requestServerTicket) und Antwort auswerten
-			if ((serverTicket = getServerTicket()) != null) {
+			if ((serverTicket = getServerTicket(serverName)) != null) {
+				Auth auth = buildAuth();
+				auth.encrypt(serverSessionKey);
 				
 				// Service beim Server anfordern (Schritt 5: requestService)
-				myFileserver.requestService(serverTicket, null, null, null);
+				success = myFileserver.requestService(serverTicket, auth, "showFile", filePath);
 			}
 		}
 		return success;
@@ -89,6 +91,10 @@ public class Client extends Object {
 
 	/* *********** Hilfsmethoden **************************** */
 
+	private Auth buildAuth() {
+		return new Auth(currentUser, (new Date()).getTime());
+	}
+	
 	private Ticket getTGSTicket() {
 		if (tgsTicket.equals(null)) {
 			// build tgsTicket?
@@ -96,9 +102,17 @@ public class Client extends Object {
 		return tgsTicket;
 	}
 	
-	private Ticket getServerTicket() {
+	private Ticket getServerTicket(String serverName) {
 		if (serverTicket.equals(null)) {
 			// build serverTicket
+			Auth auth = buildAuth();
+			auth.encrypt(tgsSessionKey);
+			
+			TicketResponse ticket = myKDC.requestServerTicket(getTGSTicket(), auth, serverName, generateNonce());
+			if (ticket.decrypt(tgsSessionKey)) {
+				serverTicket = ticket.getResponseTicket();
+				serverSessionKey = ticket.getSessionKey();
+			}
 		}
 		return serverTicket;
 	}
