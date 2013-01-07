@@ -73,7 +73,7 @@ public class Client extends Object {
 		
 		System.out.println("Client#showFile");
 		
-		// Login prŸfen: TGS-Ticket vorhanden?
+		// Login prï¿½fen: TGS-Ticket vorhanden?
 		if (getTGSTicket() != null ) {
 			
 			// Serverticket vorhanden? Wenn nicht, neues Serverticket anfordern (Schritt 3: requestServerTicket) und Antwort auswerten
@@ -106,9 +106,11 @@ public class Client extends Object {
 			// build serverTicket
 			Auth auth = buildAuth();
 			auth.encrypt(tgsSessionKey);
-			
-			TicketResponse ticket = myKDC.requestServerTicket(getTGSTicket(), auth, serverName, generateNonce());
-			if (ticket.decrypt(tgsSessionKey)) {
+
+
+            long nonce = generateNonce();
+			TicketResponse ticket = myKDC.requestServerTicket(getTGSTicket(), auth, serverName, nonce);
+			if (ticket.decrypt(tgsSessionKey) && ticket.getNonce() == nonce) {
 				serverTicket = ticket.getResponseTicket();
 				serverSessionKey = ticket.getSessionKey();
 				serverTicket.print();
