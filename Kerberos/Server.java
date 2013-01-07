@@ -35,12 +35,14 @@ public class Server extends Object {
 	public boolean requestService(Ticket srvTicket, Auth srvAuth, String command, String parameter) {
 		boolean success = false;
 		
-		if (srvTicket.decrypt(myKey)) {
-			if (srvAuth.decrypt(srvTicket.getSessionKey())) {
-				if (command.equalsIgnoreCase("showFile")) {
-					success = showFile(parameter);
-				}
-			}
+		if (srvTicket.decrypt(myKey) &&
+			srvAuth.decrypt(srvTicket.getSessionKey()) &&
+            srvTicket.getClientName() == srvAuth.getClientName() &&
+            timeValid(srvTicket.getStartTime(), srvTicket.getEndTime()) &&
+            srvTicket.getServerName() == myName &&
+			command.equalsIgnoreCase("showFile"))
+        {
+    		success = showFile(parameter);
 		}
 		
 		return success;
